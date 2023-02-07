@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -33,17 +34,22 @@ public class DriveTrain extends SubsystemBase {
     private final Encoder rightEncoder = new Encoder(2, 3);
 
     // usually paired together to access the robot's locaition/physics info
-    private final DifferentialDriveOdometry odometry;    
+    private final DifferentialDriveOdometry odometry;
     // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-kinematics.html
     private final DifferentialDriveKinematics kinematics;
     private final DifferentialDriveWheelSpeeds wheelSpeeds;
+    // more info here:
+    // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/intro-and-chassis-speeds.html
+    // private ChassisSpeeds chasisSpeeds = new ChassisSpeeds();
+    // u don't use them here, but inside the command if needed to convert to
+    // differential drive speeds
 
     AHRS gyro = new AHRS();
 
     public DriveTrain() {
         leftEncoder.setDistancePerPulse(1);
         rightEncoder.setDistancePerPulse(1);
-        
+
         odometry = new DifferentialDriveOdometry(gyro.getAngle(), leftEncoder, rightEncoder);
         kinematics = new DifferentialDriveKinematics(0.5);
     }
