@@ -97,13 +97,3 @@ wpi.java.configureTestTasks(test)
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
-
-// Dependencies for AprilTags 
-// OpenCV manages computer vision, 
-dependencies {
-    implementation 'org.openftc:easyopencv:1.5.3'
-} 
-// Official aprilTag dependency
-dependencies {
-    implementation 'org.openftc:apriltag:1.1.1'
-}
