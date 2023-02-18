@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.DriveTrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,6 +29,8 @@ public class Robot extends TimedRobot {
   private DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
   private Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
+  private final DriveTrain driveTrain = new DriveTrain();
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
