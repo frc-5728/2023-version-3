@@ -37,7 +37,6 @@ public class DriveTrain extends SubsystemBase {
     private final DifferentialDriveOdometry odometry;
     // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-kinematics.html
     private final DifferentialDriveKinematics kinematics;
-    private final DifferentialDriveWheelSpeeds wheelSpeeds;
     // more info here:
     // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/intro-and-chassis-speeds.html
     // private ChassisSpeeds chasisSpeeds = new ChassisSpeeds();
@@ -50,7 +49,7 @@ public class DriveTrain extends SubsystemBase {
         leftEncoder.setDistancePerPulse(1);
         rightEncoder.setDistancePerPulse(1);
 
-        odometry = new DifferentialDriveOdometry(gyro.getAngle(), leftEncoder, rightEncoder);
+        odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
         kinematics = new DifferentialDriveKinematics(0.5);
     }
 
@@ -186,6 +185,6 @@ public class DriveTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(gyro.getAngle(), leftEncoder.getDistance(), rightEncoder.getDistance());
+        odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
     }
 }
