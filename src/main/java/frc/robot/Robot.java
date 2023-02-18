@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -29,7 +30,8 @@ public class Robot extends TimedRobot {
   private DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
   private Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
-  private final DriveTrain driveTrain = new DriveTrain();
+  public static DriveTrain driveTrain = new DriveTrain();
+  public static OI m_oi = new OI();
   
   /**
    * This function is run when the robot is first started up and should be used for any

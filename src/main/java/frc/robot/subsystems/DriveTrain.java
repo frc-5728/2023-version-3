@@ -14,14 +14,16 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotMap;
+import frc.robot.commands.TankDrive;
 
 public class DriveTrain extends SubsystemBase {
     // motors
-    private CANSparkMax m0CanSparkMax = new CANSparkMax(0, com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax m1CanSparkMax = new CANSparkMax(1, MotorType.kBrushless);
+    private CANSparkMax m0CanSparkMax = new CANSparkMax(RobotMap.MOTOR_LEFT0_ID, MotorType.kBrushless);
+    private CANSparkMax m1CanSparkMax = new CANSparkMax(RobotMap.MOTOR_LEFT1_ID, MotorType.kBrushless);
 
-    private CANSparkMax m2CanSparkMax = new CANSparkMax(2, MotorType.kBrushless);
-    private CANSparkMax m3CanSparkMax = new CANSparkMax(3, MotorType.kBrushless);
+    private CANSparkMax m2CanSparkMax = new CANSparkMax(RobotMap.MOTOR_RIGHT0_ID, MotorType.kBrushless);
+    private CANSparkMax m3CanSparkMax = new CANSparkMax(RobotMap.MOTOR_RIGHT1_ID, MotorType.kBrushless);
 
     // drive trains
     private final MotorControllerGroup leftMotors = new MotorControllerGroup(m0CanSparkMax, m1CanSparkMax);
@@ -51,6 +53,20 @@ public class DriveTrain extends SubsystemBase {
 
         odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
         kinematics = new DifferentialDriveKinematics(0.5);
+
+        setDefaultCommand(new TankDrive());
+    }
+
+    public void setSpeed(double speed) {
+        drive.tankDrive(speed, speed);
+    }
+
+    public void setLeftSpeed(double speed) {
+        leftMotors.set(speed);
+    }
+
+    public void setRightSpeed(double speed) {
+        rightMotors.set(speed);
     }
 
 
