@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.commands.TankDrive;
@@ -35,15 +37,15 @@ public class DriveTrain extends SubsystemBase {
     private final Encoder leftEncoder = new Encoder(0, 1);
     private final Encoder rightEncoder = new Encoder(2, 3);
 
+    // https://www.youtube.com/watch?v=_mKlRbapkXo&ab_channel=EastRobotics
+    private double kP = 0;
+    private double kI = 0;
+    private double kD = 0;
+    public final PIDController turnController;
+
     // usually paired together to access the robot's locaition/physics info
     private final DifferentialDriveOdometry odometry;
-    // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/differential-drive-kinematics.html
     private final DifferentialDriveKinematics kinematics;
-    // more info here:
-    // https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/intro-and-chassis-speeds.html
-    // private ChassisSpeeds chasisSpeeds = new ChassisSpeeds();
-    // u don't use them here, but inside the command if needed to convert to
-    // differential drive speeds
 
     AHRS gyro = new AHRS();
 
@@ -51,14 +53,30 @@ public class DriveTrain extends SubsystemBase {
         leftEncoder.setDistancePerPulse(1);
         rightEncoder.setDistancePerPulse(1);
 
-        odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+        odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getDistance(),
+                rightEncoder.getDistance());
         kinematics = new DifferentialDriveKinematics(0.5);
 
+        turnController = new PIDController(kP, kI, kD);
+        turnController.enableContinuousInput(-180.0f, -180.0f);
+        
         setDefaultCommand(new TankDrive());
     }
 
+    public void pidWrite(double output) {
+        setSpeed(output);
+    }
+
     public void setSpeed(double speed) {
-        drive.tankDrive(speed, speed);
+        // give the speed in meters per sec written in chassis
+        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(speed, speed, 0);
+
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+
+        // drive.tankDrive(wheelSpeeds.leftMetersPerSecond,
+        // wheelSpeeds.rightMetersPerSecond);
+        setLeftSpeed(wheelSpeeds.leftMetersPerSecond);
+        setRightSpeed(wheelSpeeds.rightMetersPerSecond);
     }
 
     public void setLeftSpeed(double speed) {
@@ -68,7 +86,6 @@ public class DriveTrain extends SubsystemBase {
     public void setRightSpeed(double speed) {
         rightMotors.set(speed);
     }
-
 
     public CommandBase drive(double speed, double rotation) {
         return new CommandBase() {
@@ -108,12 +125,12 @@ public class DriveTrain extends SubsystemBase {
 
             @Override
             public void end(boolean interrupted) {
-                drive.arcadeDrive(0, 0);
+                gyro.reset();
             }
 
             @Override
             public boolean isFinished() {
-                return false;
+                return gyro.getAngle() == 0;
             }
         };
     }
@@ -152,9 +169,9 @@ public class DriveTrain extends SubsystemBase {
             @Override
             public void execute() {
                 if (gyro.getAngle() > 0) {
-                    drive.arcadeDrive(0, -adjustingSpeed);
+                    drive.tankDrive(0, -adjustingSpeed * gyro.getAngle());
                 } else if (gyro.getAngle() < 0) {
-                    drive.arcadeDrive(0, adjustingSpeed);
+                    drive.tankDrive(0, adjustingSpeed * gyro.getAngle());
                 } else {
                     drive.arcadeDrive(0, 0);
                 }
