@@ -19,4 +19,5 @@ public class RobotMap {
     public static final int LEFT_TRIGGER = 0;
     public static final double TURNING_RATE = 0.4;
     public static final int X_BUTTON_ID = 0;
+    public static final int ARM_MOTOR_ID = 0;
 }
