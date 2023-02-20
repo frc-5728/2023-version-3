@@ -13,6 +13,7 @@ import frc.robot.subsystems.ArmProfiledPID;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.HatchMechanism;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -32,6 +33,7 @@ public class RobotContainer {
   private final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
   private final ArmProfiledPID arm = new ArmProfiledPID();
+  private final HatchMechanism hatchMechanism = new HatchMechanism();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController controller =
