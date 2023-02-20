@@ -59,8 +59,8 @@ public class DriveTrain extends SubsystemBase {
 
         turnController = new PIDController(kP, kI, kD);
         turnController.enableContinuousInput(-180.0f, -180.0f);
-        
-        setDefaultCommand(new TankDrive());
+
+        // setDefaultCommand(new TankDrive(this));
     }
 
     public void pidWrite(double output) {
@@ -87,138 +87,11 @@ public class DriveTrain extends SubsystemBase {
         rightMotors.set(speed);
     }
 
-    public CommandBase drive(double speed, double rotation) {
-        return new CommandBase() {
-            @Override
-            public void initialize() {
-                drive.arcadeDrive(speed, rotation);
-            }
-
-            @Override
-            public void execute() {
-                drive.arcadeDrive(speed, rotation);
-            }
-
-            @Override
-            public void end(boolean interrupted) {
-                drive.arcadeDrive(0, 0);
-            }
-
-            @Override
-            public boolean isFinished() {
-                return false;
-            }
-        };
-    }
-
-    public CommandBase turnLeftCommand(double speed) {
-        return new CommandBase() {
-            @Override
-            public void initialize() {
-                drive.arcadeDrive(0, speed);
-            }
-
-            @Override
-            public void execute() {
-                drive.arcadeDrive(0, speed);
-            }
-
-            @Override
-            public void end(boolean interrupted) {
-                gyro.reset();
-            }
-
-            @Override
-            public boolean isFinished() {
-                return gyro.getAngle() == 0;
-            }
-        };
-    }
-
-    public CommandBase turnRightCommand(double speed) {
-        return new CommandBase() {
-            @Override
-            public void initialize() {
-                drive.arcadeDrive(0, -speed);
-            }
-
-            @Override
-            public void execute() {
-                drive.arcadeDrive(0, -speed);
-            }
-
-            @Override
-            public void end(boolean interrupted) {
-                drive.arcadeDrive(0, 0);
-            }
-
-            @Override
-            public boolean isFinished() {
-                return false;
-            }
-        };
-    }
-
-    public CommandBase adjustAngleToZero(double adjustingSpeed) {
-        return new CommandBase() {
-            @Override
-            public void initialize() {
-                drive.arcadeDrive(0, 0);
-            }
-
-            @Override
-            public void execute() {
-                if (gyro.getAngle() > 0) {
-                    drive.tankDrive(0, -adjustingSpeed * gyro.getAngle());
-                } else if (gyro.getAngle() < 0) {
-                    drive.tankDrive(0, adjustingSpeed * gyro.getAngle());
-                } else {
-                    drive.arcadeDrive(0, 0);
-                }
-            }
-
-            @Override
-            public void end(boolean interrupted) {
-                drive.arcadeDrive(0, 0);
-            }
-
-            @Override
-            public boolean isFinished() {
-                return gyro.getAngle() == 0;
-            }
-        };
-    }
-
-    public CommandBase driveToDistance(double distance, double speed) {
-        return new CommandBase() {
-            @Override
-            public void initialize() {
-                drive.arcadeDrive(0, 0);
-            }
-
-            @Override
-            public void execute() {
-                if (leftEncoder.getDistance() < distance) {
-                    drive.arcadeDrive(speed, 0);
-                } else {
-                    drive.arcadeDrive(0, 0);
-                }
-            }
-
-            @Override
-            public void end(boolean interrupted) {
-                drive.arcadeDrive(0, 0);
-            }
-
-            @Override
-            public boolean isFinished() {
-                return leftEncoder.getDistance() >= distance;
-            }
-        };
-    }
-
     @Override
     public void periodic() {
-        odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+        
+        // we dont have encoders
+
+        // odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
     }
 }

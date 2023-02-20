@@ -10,10 +10,14 @@ import frc.robot.RobotMap;
 import frc.robot.subsystems.DriveTrain;
 
 public class TankDrive extends CommandBase {
+  private final DriveTrain driveTrain;
+  
   /** Creates a new TankDrive. */
-  public TankDrive() {
+  public TankDrive(DriveTrain driveTrain) {
+    this.driveTrain = driveTrain;
+    
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.driveTrain);
+    addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.
@@ -32,8 +36,8 @@ public class TankDrive extends CommandBase {
 
     // this is using manning robotic's GTA drive where they control robot like the GTA game
 
-    Robot.driveTrain.setLeftSpeed(triggerVal + stick);
-    Robot.driveTrain.setRightSpeed(triggerVal - stick);
+    driveTrain.setLeftSpeed(triggerVal + stick);
+    driveTrain.setRightSpeed(triggerVal - stick);
   }
 
   // Called once the command ends or is interrupted.

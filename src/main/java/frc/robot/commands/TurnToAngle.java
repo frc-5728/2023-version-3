@@ -11,31 +11,38 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.subsystems.DriveTrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TurnToAngle extends PIDCommand {
+  private final DriveTrain driveTrain;
+  
   /** Creates a new TurnToAngle. */
-  public TurnToAngle() {
+  public TurnToAngle(DriveTrain driveTrain, double angle) {
     super(
         // The controller that the command will use
         new PIDController(0, 0, 0),
         // This should return the measurement
         () -> 0,
         // This should return the setpoint (can also be a constant)
-        () -> 0,
+        () -> angle,
         // This uses the output
         output -> {
           // Use the output here
+          System.out.println("Turn to angle output: ");
+          System.out.println(output);
         });
 
         getController().enableContinuousInput(-180, 180);
         getController().setTolerance(RobotMap.TURNING_RATE);
         
+        this.driveTrain = driveTrain;
+        
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
-    addRequirements(Robot.driveTrain);
+    addRequirements(driveTrain);
   }
 
   // Returns true when the command should end.
