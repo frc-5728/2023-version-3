@@ -45,6 +45,16 @@ wpi.java.debugJni = false
 // Set this to true to enable desktop support.
 def includeDesktopSupport = true
 
+// // Dependencies for AprilTags 
+// // OpenCV manages computer vision, 
+// dependencies {
+//     implementation 'org.openftc:easyopencv:1.5.3'
+// } 
+// // Official aprilTag dependency
+// dependencies {
+//     implementation 'org.openftc:apriltag:1.1.1'
+// }
+
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
 dependencies {
