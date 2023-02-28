@@ -46,7 +46,8 @@ public class RobotContainer {
   }
 
   private void configureBindingsDriveTrain() {
-    controller.leftBumper().onTrue(new TurnToAngle(driveTrain, 90));
+    controller.leftBumper().onTrue(new TurnToAngle(driveTrain, 15));
+    controller.rightBumper().onTrue(new TurnToAngle(driveTrain, 15));
   }
 
   /**
