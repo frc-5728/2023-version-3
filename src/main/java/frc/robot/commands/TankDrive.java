@@ -28,8 +28,8 @@ public class TankDrive extends CommandBase {
   @Override
   public void execute() {
     // called in every periodic
-    double leftStickY = Robot.m_oi.getRawAxis(RobotMap.LEFT_STICK_Y);
-    double rightStickY = Robot.m_oi.getRawAxis(RobotMap.RIGHT_STICK_Y);
+    // double leftStickY = Robot.m_oi.getRawAxis(RobotMap.LEFT_STICK_Y);
+    // double rightStickY = Robot.m_oi.getRawAxis(RobotMap.RIGHT_STICK_Y);
 
     double triggerVal = Robot.m_oi.getRightTriggerAxis() - Robot.m_oi.getLeftTriggerAxis();
     double stick = Robot.m_oi.getLeftX() * RobotMap.TURNING_RATE;

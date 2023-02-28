@@ -6,23 +6,26 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
+import frc.robot.subsystems.DriveTrain;
 
 public class Move extends CommandBase {
-  double m_time;
+  private double m_time;
+  private DriveTrain driveTrain;
   
   /** Creates a new Move. */
-  public Move(double time) {
+  public Move(double time, DriveTrain driveTrain) {
     // the time I want this to move
     m_time = time;
+    this.driveTrain = driveTrain;
     
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.driveTrain);
+    addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.driveTrain.setSpeed(0.5);
+    driveTrain.setSpeed(0.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
 
 /**
@@ -24,13 +25,13 @@ import frc.robot.subsystems.DriveTrain;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
+  
   private RobotContainer m_robotContainer;
 
-  private DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
+  // private DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
   private Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
-  public static DriveTrain driveTrain = new DriveTrain();
+  // public static DriveTrain driveTrain = new DriveTrain();
   public static OI m_oi = new OI();
   
   /**

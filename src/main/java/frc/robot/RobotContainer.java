@@ -47,8 +47,6 @@ public class RobotContainer {
 
   private void configureBindingsDriveTrain() {
     controller.leftBumper().onTrue(new TurnToAngle(driveTrain, 90));
-
-    controller.povUp().onTrue(new TankDrive(driveTrain));
   }
 
   /**
@@ -62,7 +60,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // bind the triggers to the commands here
-    
+    configureBindingsDriveTrain();
     
     Trigger xButtonTrigger = controller.x();
     // xButtonTrigger.onTrue(); // some elevator command activation here probs

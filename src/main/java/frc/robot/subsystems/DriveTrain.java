@@ -28,15 +28,14 @@ public class DriveTrain extends SubsystemBase {
     private CANSparkMax m3CanSparkMax = new CANSparkMax(RobotMap.MOTOR_RIGHT1_ID, MotorType.kBrushless);
 
     // drive trains
+    // these shit didn't work; don't use them
     private final MotorControllerGroup leftMotors = new MotorControllerGroup(m0CanSparkMax, m1CanSparkMax);
     private final MotorControllerGroup rightMotors = new MotorControllerGroup(m2CanSparkMax, m3CanSparkMax);
 
     private final DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
 
     // now for the encoders
-    private final Encoder leftEncoder = new Encoder(0, 1);
-    private final Encoder rightEncoder = new Encoder(2, 3);
-
+    
     // https://www.youtube.com/watch?v=_mKlRbapkXo&ab_channel=EastRobotics
     private double kP = 0;
     private double kI = 0;
@@ -44,23 +43,19 @@ public class DriveTrain extends SubsystemBase {
     public final PIDController turnController;
 
     // usually paired together to access the robot's locaition/physics info
-    private final DifferentialDriveOdometry odometry;
+    // private final DifferentialDriveOdometry odometry;
     private final DifferentialDriveKinematics kinematics;
 
     AHRS gyro = new AHRS();
 
     public DriveTrain() {
-        leftEncoder.setDistancePerPulse(1);
-        rightEncoder.setDistancePerPulse(1);
-
-        odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getDistance(),
-                rightEncoder.getDistance());
+        
         kinematics = new DifferentialDriveKinematics(0.5);
 
         turnController = new PIDController(kP, kI, kD);
         turnController.enableContinuousInput(-180.0f, -180.0f);
 
-        // setDefaultCommand(new TankDrive(this));
+        setDefaultCommand(new TankDrive(this));
     }
 
     public void pidWrite(double output) {
@@ -80,11 +75,13 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void setLeftSpeed(double speed) {
-        leftMotors.set(speed);
+        m0CanSparkMax.set(speed);
+        m1CanSparkMax.set(speed);
     }
 
     public void setRightSpeed(double speed) {
-        rightMotors.set(speed);
+        m2CanSparkMax.set(-speed);
+        m3CanSparkMax.set(-speed);
     }
 
     @Override

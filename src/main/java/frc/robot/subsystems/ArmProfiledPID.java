@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.RobotMap;
 
 public class ArmProfiledPID extends ProfiledPIDSubsystem {
-  private final VictorSPX motor = new VictorSPX(RobotMap.ARM_MOTOR_ID);
-  private final Encoder encoder = new Encoder(0, 0);
+  // private final VictorSPX motor = new VictorSPX(RobotMap.ARM_MOTOR_ID);
+  // private final Encoder encoder = new Encoder(0, 0);
   private final ArmFeedforward armFeedforward = new ArmFeedforward(getMeasurement(), getMeasurement(), getMeasurement());
 
   private final static double kP = 0; // something to be tuned later
@@ -37,7 +37,7 @@ public class ArmProfiledPID extends ProfiledPIDSubsystem {
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
     // Use the output (and optionally the setpoint) here
-    motor.set(ControlMode.MotionMagic, output);
+    // motor.set(ControlMode.MotionMagic, output);
   }
 
   @Override
