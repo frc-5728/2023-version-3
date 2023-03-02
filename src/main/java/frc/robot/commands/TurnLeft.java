@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.DriveTrain;
@@ -12,27 +13,39 @@ import frc.robot.subsystems.DriveTrain;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TurnLeft extends PIDCommand {
+  private double angle;
+  private DriveTrain driveTrain;
+  
   /** Creates a new TurnLeft. */
   public TurnLeft(DriveTrain driveTrain, double angle) {
     // turn "angle" degrees to the left
     super(
         // The controller that the command will use
-        new PIDController(0, 0, 0),
+        new PIDController(0.3, 0, 0.5),
         // This should return the measurement
-        () -> 0,
+        () -> driveTrain.gyro.getYaw(),
         // This should return the setpoint (can also be a constant)
-        () -> 0,
+        () -> angle,
         // This uses the output
         output -> {
           // Use the output here
+          System.out.println("Turn left output: " + output);
+
+          double outputClamped = MathUtil.clamp(output, -0.3, 0.3);
+          driveTrain.setLeftSpeed(outputClamped);
+          driveTrain.setRightSpeed(-outputClamped);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
+    addRequirements(driveTrain);
+
+    this.driveTrain = driveTrain;
+    this.angle = angle;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return driveTrain.gyro.getYaw() == angle;
   }
 }

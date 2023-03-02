@@ -4,43 +4,52 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.subsystems.DriveTrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Move extends ProfiledPIDCommand {
-  // move forward some distance using the tratezoid motion profile to limit satuation 
-  // more info about saturation and anti-windups here: https://www.youtube.com/watch?v=NVLXCwc8HzM
+public class Move extends PIDCommand {
+  private double distance;
+  private DriveTrain driveTrain;
   
   /** Creates a new Move. */
-  public Move(double distance) {
+  public Move(double distance, DriveTrain driveTrain) {
     super(
-        // The ProfiledPIDController used by the command
-        new ProfiledPIDController(
-            // The PID gains
-            0,
-            0,
-            0,
-            // The motion profile constraints
-            new TrapezoidProfile.Constraints(0, 0)),
+        // The controller that the command will use
+        new PIDController(0.3, 0, 0),
         // This should return the measurement
-        () -> 0,
-        // This should return the goal (can also be a constant)
-        () -> new TrapezoidProfile.State(),
+        () -> driveTrain.gyro.getDisplacementX(),
+        // This should return the setpoint (can also be a constant)
+        () -> distance,
         // This uses the output
-        (output, setpoint) -> {
-          // Use the output (and setpoint, if desired) here
+        output -> {
+          // Use the output here
+          // System.out.println("Move output: " + output);
+          System.out.println();
+
+          driveTrain.setSpeed(MathUtil.clamp(-output, -0.3, 0.3));
+          
+          // System.out.println("getdisplacementX gyro: " + driveTrain.gyro.getDisplacementX());
+          // System.out.println("getdisplacementY gyro: " + driveTrain.gyro.getDisplacementY());
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
-  }
 
+    addRequirements(driveTrain);
+
+    this.driveTrain = driveTrain;
+    this.distance = distance;
+  }
+  
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    
+    return driveTrain.gyro.getDisplacementX() == distance;
   }
 }

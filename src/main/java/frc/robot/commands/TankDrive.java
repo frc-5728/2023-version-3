@@ -13,22 +13,23 @@ import frc.robot.subsystems.DriveTrain;
 
 public class TankDrive extends CommandBase {
   // used during teleop tank drive
-  
+
   private final DriveTrain driveTrain;
   private final XboxController controller;
-  
+
   /** Creates a new TankDrive. */
   public TankDrive(DriveTrain driveTrain) {
     this.driveTrain = driveTrain;
     controller = new XboxController(OperatorConstants.kDriverControllerPort);
-    
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -48,15 +49,17 @@ public class TankDrive extends CommandBase {
     double slowTrigger = controller.getRightY() * RobotMap.SLOW_MODE_RATE;
     double slowStick = controller.getRightX() * RobotMap.SLOW_MODE_RATE;
 
-    // this is using manning robotic's GTA drive where they control robot like the GTA game
+    // this is using manning robotic's GTA drive where they control robot like the
+    // GTA game
 
-    driveTrain.setLeftSpeed(triggerVal + stick + (slowTrigger + slowStick));
-    driveTrain.setRightSpeed(triggerVal - stick + (slowTrigger - slowStick));
+    driveTrain.setLeftSpeed(triggerVal + stick - (slowTrigger + slowStick));
+    driveTrain.setRightSpeed(triggerVal - stick - (slowTrigger - slowStick));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

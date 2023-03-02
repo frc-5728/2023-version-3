@@ -10,6 +10,9 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.commands.TankDrive;
@@ -41,7 +44,7 @@ public class DriveTrain extends SubsystemBase {
     // private final DifferentialDriveOdometry odometry;
     private final DifferentialDriveKinematics kinematics;
 
-    AHRS gyro = new AHRS();
+    public AHRS gyro = new AHRS();
 
     public DriveTrain() {
         
@@ -58,15 +61,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        // give the speed in meters per sec written in chassis
-        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(speed, speed, 0);
-
-        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
-
-        // drive.tankDrive(wheelSpeeds.leftMetersPerSecond,
-        // wheelSpeeds.rightMetersPerSecond);
-        setLeftSpeed(wheelSpeeds.leftMetersPerSecond);
-        setRightSpeed(wheelSpeeds.rightMetersPerSecond);
+        setLeftSpeed(speed);
+        setRightSpeed(speed);
     }
 
     public void setLeftSpeed(double speed) {
@@ -81,6 +77,16 @@ public class DriveTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // displaying data
+        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
+        
+        SmartDashboard.putNumber("Displacement X: ", gyro.getDisplacementX());
+        SmartDashboard.putNumber("Displacement Y: ", gyro.getDisplacementY());
+
+        SmartDashboard.putNumber("Pitch", gyro.getPitch());
+        SmartDashboard.putNumber("Yaw", gyro.getYaw());
+        SmartDashboard.putNumber("Angle", gyro.getAngle());
+        
         
         // we dont have encoders
 
