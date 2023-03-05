@@ -21,23 +21,32 @@ public class TurnLeft extends PIDCommand {
     // turn "angle" degrees to the left
     super(
         // The controller that the command will use
-        new PIDController(0.3, 0, 0.5),
+        new PIDController(0.5, 0.5, 0.1),
         // This should return the measurement
-        () -> driveTrain.gyro.getYaw(),
+        () -> {
+          double result = driveTrain.gyro.getYaw();
+          // if (driveTrain.gyro.getYaw() < 0) {
+          //   result += 180;
+          // }
+          return 180-angle + result;
+        },
         // This should return the setpoint (can also be a constant)
-        () -> angle,
+        () -> 180,
         // This uses the output
         output -> {
           // Use the output here
           System.out.println("Turn left output: " + output);
 
-          double outputClamped = MathUtil.clamp(output, -0.3, 0.3);
-          driveTrain.setLeftSpeed(outputClamped);
-          driveTrain.setRightSpeed(-outputClamped);
+          double outputClamped = MathUtil.clamp(output/100, -0.1, 0.1);
+          driveTrain.setLeftSpeed(-outputClamped);
+          driveTrain.setRightSpeed(outputClamped);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
     addRequirements(driveTrain);
+
+    getController().setTolerance(5);
+    getController().setIntegratorRange(-5, 5);
 
     this.driveTrain = driveTrain;
     this.angle = angle;
@@ -46,6 +55,6 @@ public class TurnLeft extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return driveTrain.gyro.getYaw() == angle;
+    return getController().atSetpoint();
   }
 }

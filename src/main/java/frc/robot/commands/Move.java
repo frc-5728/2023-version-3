@@ -21,7 +21,7 @@ public class Move extends PIDCommand {
   public Move(double distance, DriveTrain driveTrain) {
     super(
         // The controller that the command will use
-        new PIDController(0.3, 0, 0),
+        new PIDController(0.5, 0.1, 1),
         // This should return the measurement
         () -> driveTrain.gyro.getDisplacementX(),
         // This should return the setpoint (can also be a constant)
@@ -32,7 +32,7 @@ public class Move extends PIDCommand {
           // System.out.println("Move output: " + output);
           System.out.println();
 
-          driveTrain.setSpeed(MathUtil.clamp(-output, -0.3, 0.3));
+          driveTrain.setSpeed(MathUtil.clamp(-output, -0.1, 0.1));
           
           // System.out.println("getdisplacementX gyro: " + driveTrain.gyro.getDisplacementX());
           // System.out.println("getdisplacementY gyro: " + driveTrain.gyro.getDisplacementY());
@@ -41,6 +41,9 @@ public class Move extends PIDCommand {
     // Configure additional PID options by calling `getController` here.
 
     addRequirements(driveTrain);
+
+    getController().setTolerance(0.1);
+    getController().setIntegratorRange(-2, 2);
 
     this.driveTrain = driveTrain;
     this.distance = distance;
