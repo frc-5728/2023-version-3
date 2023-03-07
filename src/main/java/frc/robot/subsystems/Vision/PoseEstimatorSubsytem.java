@@ -27,7 +27,7 @@ public class PoseEstimatorSubsytem extends SubsystemBase {
     private boolean hasTarget = false;
     private int targetID;
 
-    PhotonCamera camera = new PhotonCamera("Camera");
+    PhotonCamera camera = new PhotonCamera("photonvision");
 
     // Code in periodic should only be to get camera data, checking position and
     // moving should be done every execute

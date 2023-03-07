@@ -47,13 +47,12 @@ public class TankDrive extends CommandBase {
 
     // for a slow controlling mode on the right side
     double slowTrigger = controller.getRightY() * RobotMap.SLOW_MODE_RATE;
-    double slowStick = controller.getRightX() * RobotMap.SLOW_MODE_RATE;
 
     // this is using manning robotic's GTA drive where they control robot like the
     // GTA game
 
-    driveTrain.setLeftSpeed(triggerVal + stick - (slowTrigger + slowStick));
-    driveTrain.setRightSpeed(triggerVal - stick - (slowTrigger - slowStick));
+    driveTrain.setLeftSpeed(triggerVal + stick - (slowTrigger));
+    driveTrain.setRightSpeed(triggerVal - stick - (slowTrigger));
   }
 
   // Called once the command ends or is interrupted.
