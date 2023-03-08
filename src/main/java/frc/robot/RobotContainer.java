@@ -56,6 +56,11 @@ public class RobotContainer {
     controller.povDown().onTrue(new Move(-0.01, driveTrain));
   }
 
+  private void configureBindingsFeatures() {
+    // controller.povUp().onTrue(elevator.setSetpoint(2));
+    elevator.enable();
+  }
+
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -68,6 +73,7 @@ public class RobotContainer {
   private void configureBindings() {
     // bind the triggers to the commands here
     configureBindingsDriveTrain();
+    configureBindingsFeatures();
     
     // xButtonTrigger.onTrue(); // some elevator command activation here probs
 
