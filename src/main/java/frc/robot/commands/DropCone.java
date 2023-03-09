@@ -1,51 +1,25 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 
-public class DropCone extends CommandBase {
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class DropCone extends ParallelCommandGroup {
+  /** Creates a new DropCone. */
+  public DropCone(ReflectiveTapeSubsystem reflectiveTapeSubsystem, DriveTrain driveTrain) {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    PIDCommand turnCommand = null;
+    // if (reflectiveTapeSubsystem.getYaw())
     
-    private final ReflectiveTapeSubsystem rtSubsystem;
-
-    private final double displacementCone = 0.2;
-    private final double elevatorHeight = 1;
-
-    public DropCone(ReflectiveTapeSubsystem rtSubsystem, DriveTrain driveTrain) {
-
-        this.rtSubsystem = rtSubsystem;
-
-        if (rtSubsystem.hasTarget) {
-
-            // Change values to correct units
-
-            // parallel command to raise elevator arm
-            addParallel(new TurnLeft(driveTrain, rtSubsystem.getYaw()) );
-            addSequential(new Move(rtSubsystem.getRange() - displacementCone, driveTrain) );
-            // sequential command to release cone
-
-        }
-        else {
-            System.out.println("No target");
-        }
-        
-        addRequirements(rtSubsystem);
-
-    }
-
-    @Override
-    public void initialize() {
-        System.out.println("Cone Drop command initialized");
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        System.out.println("Cone Drop command ended");
-    }
-
-    @Override
-    public void isFinished() {
-        return false;
-    }
-
+    addCommands();
+  }
 }
