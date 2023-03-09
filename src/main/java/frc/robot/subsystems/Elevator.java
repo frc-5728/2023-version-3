@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
 public class Elevator extends PIDSubsystem {
@@ -22,14 +23,19 @@ public class Elevator extends PIDSubsystem {
     super(
         // The PIDController used by the subsystem
         new PIDController(0.3, 0, 0));
+        
         setSetpoint(10);
+
+        encoder.setPositionConversionFactor(1);
   }
 
   @Override
   public void useOutput(double output, double setpoint) {
     // Use the output here
     System.out.println("Elevator output: " + output);
+    SmartDashboard.putNumber("Elevator output", output);
     System.out.println("Elevator Encoder value: " + encoder.getPosition());
+    SmartDashboard.putNumber("Elevator Encoder value", encoder.getPosition());
     System.out.println();
 
     // motor.set(MathUtil.clamp(output, -0.5, 0.5));
