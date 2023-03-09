@@ -13,21 +13,25 @@ import org.photonvision.common.hardware.VisionLEDMode;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class reflectiveTapeSubsystem extends SubsystemBase {
+public class ReflectiveTapeSubsystem extends SubsystemBase {
     
     // Constants such as camera and target height stored.
-    final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(28);
-    final double TARGET_HEIGHT_METERS = Units.inchesToMeters(105);
+    final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(66);
+    final double TARGET_HEIGHT_METERS = Units.inchesToMeters(24);
     // Angle between horizontal and the camera.
     final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(90);// 29.5
 
     private double yawVal = 0;
     private double pitchVal = 0;
     private double areaVal = 0;
-    private boolean hasTarget = false;
+    public boolean hasTarget = false;
+
+    public ReflectiveTapeSubsystem() {
+        System.out.println("Reflective Tape subsystem initialized");
+    }
 
     // Set name of camera *****************************************************
-    PhotonCamera camera = new PhotonCamera("photonvision");
+    PhotonCamera camera = new PhotonCamera("reflectiveTapeCam");
 
     // Code in periodic should only be to get camera data, checking position and
     // moving should be done every execute
@@ -62,9 +66,7 @@ public class reflectiveTapeSubsystem extends SubsystemBase {
                 Units.degreesToRadians(pitchVal)
         );
 
-        double rangeInInches = Units.metersToInches(range);
-
-        SmartDashboard.putNumber("Camera Distance to tape", rangeInInches);
+        SmartDashboard.putNumber("Camera Distance to tape", range);
 
         return range;
         
