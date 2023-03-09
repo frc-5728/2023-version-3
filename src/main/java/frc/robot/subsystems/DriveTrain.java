@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -9,12 +10,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.commands.TankDrive;
@@ -28,39 +29,46 @@ public class DriveTrain extends SubsystemBase {
     private CANSparkMax m3CanSparkMax = new CANSparkMax(RobotMap.MOTOR_RIGHT1_ID, MotorType.kBrushless);
 
     // drive trains
+    // these shit didn't work; don't use them
     private final MotorControllerGroup leftMotors = new MotorControllerGroup(m0CanSparkMax, m1CanSparkMax);
     private final MotorControllerGroup rightMotors = new MotorControllerGroup(m2CanSparkMax, m3CanSparkMax);
 
     private final DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
 
     // now for the encoders
-    private final Encoder leftEncoder = new Encoder(0, 1);
-    private final Encoder rightEncoder = new Encoder(2, 3);
-
+    
     // https://www.youtube.com/watch?v=_mKlRbapkXo&ab_channel=EastRobotics
     private double kP = 0;
     private double kI = 0;
     private double kD = 0;
-    public final PIDController turnController;
+    public final PIDController pidController;
+
+    // this gives the cirumference of the wheel
+    private final double wheelCircum = Units.inchesToMeters(6) * Math.PI; 
 
     // usually paired together to access the robot's locaition/physics info
-    private final DifferentialDriveOdometry odometry;
+    // private final DifferentialDriveOdometry odometry;
     private final DifferentialDriveKinematics kinematics;
+    private final DifferentialDriveOdometry odometry;
 
-    AHRS gyro = new AHRS();
+    // the encoders 
+    public final RelativeEncoder leftEncoder = m0CanSparkMax.getEncoder();
+    public final RelativeEncoder rightEncoder = m2CanSparkMax.getEncoder();
+    
+    public final AHRS gyro = new AHRS();
 
     public DriveTrain() {
-        leftEncoder.setDistancePerPulse(1);
-        rightEncoder.setDistancePerPulse(1);
-
-        odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getDistance(),
-                rightEncoder.getDistance());
+        leftEncoder.setPositionConversionFactor(wheelCircum);
+        rightEncoder.setPositionConversionFactor(wheelCircum);
+        leftEncoder.setVelocityConversionFactor(wheelCircum);
+        rightEncoder.setVelocityConversionFactor(wheelCircum);
+        
         kinematics = new DifferentialDriveKinematics(0.5);
+        odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
 
-        turnController = new PIDController(kP, kI, kD);
-        turnController.enableContinuousInput(-180.0f, -180.0f);
+        pidController = new PIDController(kP, kI, kD);
 
-        // setDefaultCommand(new TankDrive(this));
+        setDefaultCommand(new TankDrive(this));
     }
 
     public void pidWrite(double output) {
@@ -68,30 +76,37 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        // give the speed in meters per sec written in chassis
-        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(speed, speed, 0);
-
-        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
-
-        // drive.tankDrive(wheelSpeeds.leftMetersPerSecond,
-        // wheelSpeeds.rightMetersPerSecond);
-        setLeftSpeed(wheelSpeeds.leftMetersPerSecond);
-        setRightSpeed(wheelSpeeds.rightMetersPerSecond);
+        setLeftSpeed(speed);
+        setRightSpeed(speed);
     }
 
     public void setLeftSpeed(double speed) {
-        leftMotors.set(speed);
+        m0CanSparkMax.set(speed);
+        m1CanSparkMax.set(speed);
     }
 
     public void setRightSpeed(double speed) {
-        rightMotors.set(speed);
+        m2CanSparkMax.set(-speed);
+        m3CanSparkMax.set(-speed);
     }
+
+    // for accessing values in the odemetry
 
     @Override
     public void periodic() {
+        // displaying data
+        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
         
-        // we dont have encoders
+        SmartDashboard.putNumber("Gyro Displacement X: ", gyro.getDisplacementX());
+        SmartDashboard.putNumber("Gyro Displacement Y: ", gyro.getDisplacementY());
 
-        // odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+        SmartDashboard.putNumber("Pitch", gyro.getPitch());
+        SmartDashboard.putNumber("Yaw", gyro.getYaw());
+        SmartDashboard.putNumber("Angle", gyro.getAngle());
+
+        SmartDashboard.putNumber("left Encoder Position", leftEncoder.getPosition());
+        SmartDashboard.putNumber("right Encoder Position", rightEncoder.getPosition());
+
+        odometry.update(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
     }
 }

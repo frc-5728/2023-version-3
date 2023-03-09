@@ -13,21 +13,25 @@ import org.photonvision.common.hardware.VisionLEDMode;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class PoseEstimatorSubsytem extends SubsystemBase {
-
+public class ReflectiveTapeSubsystem extends SubsystemBase {
+    
     // Constants such as camera and target height stored.
-    final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(28);
-    final double TARGET_HEIGHT_METERS = Units.inchesToMeters(105);
+    final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(66);
+    final double TARGET_HEIGHT_METERS = Units.inchesToMeters(24);
     // Angle between horizontal and the camera.
-    final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(29.7);// 29.5
+    final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(90);// 29.5
 
     private double yawVal = 0;
     private double pitchVal = 0;
     private double areaVal = 0;
-    private boolean hasTarget = false;
-    private int targetID;
+    public boolean hasTarget = false;
 
-    PhotonCamera camera = new PhotonCamera("photonvision");
+    public ReflectiveTapeSubsystem() {
+        System.out.println("Reflective Tape subsystem initialized");
+    }
+
+    // Set name of camera *****************************************************
+    PhotonCamera camera = new PhotonCamera("reflectiveTapeCam");
 
     // Code in periodic should only be to get camera data, checking position and
     // moving should be done every execute
@@ -42,16 +46,15 @@ public class PoseEstimatorSubsytem extends SubsystemBase {
             this.pitchVal = result.getBestTarget().getPitch();
             this.areaVal = result.getBestTarget().getArea();
             this.hasTarget = true;
-            this.targetID = result.getBestTarget().getFiducialId();
 
-            SmartDashboard.putNumber("Yaw Value", yawVal);
-            SmartDashboard.putNumber("Pitch Value", pitchVal);
-            SmartDashboard.putNumber("Area Value", areaVal);
-            SmartDashboard.putBoolean("Has a Target", hasTarget);
-            SmartDashboard.putNumber("Target ID: ", targetID);
+            SmartDashboard.putNumber("RFT Yaw Value", yawVal);
+            SmartDashboard.putNumber("RFT Pitch Value", pitchVal);
+            SmartDashboard.putNumber("RFT Area Value", areaVal);
+            SmartDashboard.putBoolean("RFT Captured tape?", hasTarget);
 
         } else {
             this.hasTarget = false;
+            SmartDashboard.putBoolean("Captured tape?", hasTarget);
         }
     }
 
@@ -63,12 +66,16 @@ public class PoseEstimatorSubsytem extends SubsystemBase {
                 Units.degreesToRadians(pitchVal)
         );
 
-        double rangeInInches = Units.metersToInches(range);
-
-        SmartDashboard.putNumber("Camera Distance", rangeInInches);
+        SmartDashboard.putNumber("Camera Distance to tape", range);
 
         return range;
         
+    }
+
+    public double getYaw() {
+
+        return yawVal;
+
     }
 
 }

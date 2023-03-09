@@ -6,19 +6,25 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.DropCone;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Move;
 import frc.robot.commands.TankDrive;
+import frc.robot.commands.TurnLeft;
+import frc.robot.commands.TurnRight;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.ArmProfiledPID;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.HatchMechanism;
+import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,8 +35,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final ReflectiveTapeSubsystem m_rtSubsystem = new ReflectiveTapeSubsystem();
 
-  private final DriveTrain driveTrain = new DriveTrain();
+  public final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
   private final ArmProfiledPID arm = new ArmProfiledPID();
   private final HatchMechanism hatchMechanism = new HatchMechanism();
@@ -43,12 +50,22 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    SmartDashboard.putData("Drop Cone", new DropCone(m_rtSubsystem, driveTrain));
+
   }
 
   private void configureBindingsDriveTrain() {
-    controller.leftBumper().onTrue(new TurnToAngle(driveTrain, 90));
+    controller.leftBumper().onTrue(new TurnLeft(driveTrain, 45));
+    controller.rightBumper().onTrue(new TurnRight(driveTrain, 45));
 
-    controller.povUp().onTrue(new TankDrive(driveTrain));
+    controller.povUp().onTrue(new Move(0.01, driveTrain));
+    controller.povDown().onTrue(new Move(-0.01, driveTrain));
+  }
+
+  private void configureBindingsFeatures() {
+    // controller.povUp().onTrue(elevator.setSetpoint(2));
+    elevator.enable();
   }
 
   /**
@@ -62,9 +79,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // bind the triggers to the commands here
+    configureBindingsDriveTrain();
+    configureBindingsFeatures();
     
-    
-    Trigger xButtonTrigger = controller.x();
     // xButtonTrigger.onTrue(); // some elevator command activation here probs
 
     

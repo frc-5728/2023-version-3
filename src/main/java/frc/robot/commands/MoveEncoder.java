@@ -13,46 +13,32 @@ import frc.robot.subsystems.DriveTrain;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Move extends PIDCommand {
-  private double distance;
-  private DriveTrain driveTrain;
-  
-  /** Creates a new Move. */
-  public Move(double distance, DriveTrain driveTrain) {
+public class MoveEncoder extends PIDCommand {
+  /** Creates a new MoveEncoder. */
+  public MoveEncoder(DriveTrain driveTrain, double distance) {
     super(
         // The controller that the command will use
-        new PIDController(0.5, 0.1, 1),
+        new PIDController(0.5, 0.1, 0.5),
         // This should return the measurement
-        () -> driveTrain.gyro.getDisplacementX(),
+        () -> driveTrain.leftEncoder.getPosition(),
         // This should return the setpoint (can also be a constant)
         () -> distance,
         // This uses the output
         output -> {
           // Use the output here
-          // System.out.println("Move output: " + output);
-          System.out.println();
+          driveTrain.setSpeed(MathUtil.clamp(output, -0.5, 0.5));
 
-          driveTrain.setSpeed(MathUtil.clamp(-output, -0.1, 0.1));
-          
-          // System.out.println("getdisplacementX gyro: " + driveTrain.gyro.getDisplacementX());
-          // System.out.println("getdisplacementY gyro: " + driveTrain.gyro.getDisplacementY());
+          SmartDashboard.putNumber("Move Encoder PID Output", output);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
 
     addRequirements(driveTrain);
-
-    getController().setTolerance(0.1);
-    getController().setIntegratorRange(-2, 2);
-
-    this.driveTrain = driveTrain;
-    this.distance = distance;
   }
-  
+
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    
-    return driveTrain.gyro.getDisplacementX() == distance;
+  public boolean isFinished() {    
+    return getController().atSetpoint();
   }
 }

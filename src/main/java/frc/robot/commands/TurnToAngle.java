@@ -33,6 +33,7 @@ public class TurnToAngle extends PIDCommand {
           // Use the output here
           System.out.println("Turn to angle output: ");
           System.out.println(output);
+          System.out.println();
         });
 
         getController().enableContinuousInput(-180, 180);

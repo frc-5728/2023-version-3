@@ -4,17 +4,13 @@
 
 package frc.robot;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.Constants.OperatorConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -24,14 +20,14 @@ import frc.robot.subsystems.DriveTrain;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
+  
   private RobotContainer m_robotContainer;
 
-  private DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
+  // private DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
   private Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
-  public static DriveTrain driveTrain = new DriveTrain();
-  public static OI m_oi = new OI();
+  // public static DriveTrain driveTrain = new DriveTrain();
+  public static XboxController controller;
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -43,7 +39,9 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    // compressor.enableDigital();
+    controller = new XboxController(OperatorConstants.kDriverControllerPort);
+
+    compressor.enableDigital();
   }
 
   /**
@@ -99,6 +97,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     CommandScheduler.getInstance().run();
+
+    if (controller.getXButtonPressed()) {
+      m_robotContainer.driveTrain.gyro.resetDisplacement();
+      m_robotContainer.driveTrain.gyro.reset();
+    }
   }
 
   @Override
