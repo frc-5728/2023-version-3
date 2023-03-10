@@ -5,6 +5,7 @@ import frc.robot.subsystems.Vision.AprilTagSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.TurnLeft;
 import frc.robot.commands.Move;
@@ -17,7 +18,7 @@ public class TurnMove extends SequentialCommandGroup {
 
             addCommands(
 
-                new TurnLeft(driveTrain, rtSubsystem.getYaw()),
+                new TurnLeft(driveTrain, Units.radiansToDegrees(rtSubsystem.getYaw())),
                 new Move(rtSubsystem.getRange() - displacement, driveTrain)
 
             );
@@ -39,7 +40,7 @@ public class TurnMove extends SequentialCommandGroup {
 
             addCommands(
 
-                new TurnLeft(driveTrain, atSubsystem.getYaw()),
+                new TurnLeft(driveTrain, Units.radiansToDegrees(atSubsystem.getYaw())),
                 new Move(atSubsystem.getRange() - displacement, driveTrain)
 
             );
