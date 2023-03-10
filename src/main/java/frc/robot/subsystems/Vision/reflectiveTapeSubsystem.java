@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.math.util.Units;
-import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.common.hardware.VisionLEDMode;
 
@@ -16,19 +15,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ReflectiveTapeSubsystem extends SubsystemBase {
     
     // Constants such as camera and target height stored.
-    final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(66);
-    final double TARGET_HEIGHT_METERS = Units.inchesToMeters(24);
+    final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(68);
+    final double TARGET_HEIGHT_METERS = Units.inchesToMeters(25);
     // Angle between horizontal and the camera.
-    final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(90);// 29.5
+    final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(60);// 29.5
 
     private double yawVal = 0;
     private double pitchVal = 0;
     private double areaVal = 0;
     public boolean hasTarget = false;
 
-    public ReflectiveTapeSubsystem() {
-        System.out.println("Reflective Tape subsystem initialized");
-    }
+    public ReflectiveTapeSubsystem() {}
 
     // Set name of camera *****************************************************
     PhotonCamera camera = new PhotonCamera("reflectiveTapeCam");

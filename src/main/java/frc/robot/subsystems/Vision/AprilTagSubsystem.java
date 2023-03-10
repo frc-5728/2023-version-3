@@ -13,7 +13,7 @@ import org.photonvision.common.hardware.VisionLEDMode;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class PoseEstimatorSubsytem extends SubsystemBase {
+public class AprilTagSubsystem extends SubsystemBase {
 
     // Constants such as camera and target height stored.
     final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(28);
@@ -24,7 +24,7 @@ public class PoseEstimatorSubsytem extends SubsystemBase {
     private double yawVal = 0;
     private double pitchVal = 0;
     private double areaVal = 0;
-    private boolean hasTarget = false;
+    public boolean hasTarget = false;
     private int targetID;
 
     PhotonCamera camera = new PhotonCamera("photonvision");
@@ -69,6 +69,12 @@ public class PoseEstimatorSubsytem extends SubsystemBase {
 
         return range;
         
+    }
+
+    public double getYaw() {
+
+        return yawVal;
+
     }
 
 }
