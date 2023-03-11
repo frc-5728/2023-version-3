@@ -18,7 +18,7 @@ public class MoveEncoder extends PIDCommand {
   public MoveEncoder(DriveTrain driveTrain, double distance) {
     super(
         // The controller that the command will use
-        new PIDController(0.5, 0.1, 0.5),
+        new PIDController(0.0003, 0.1, 0.1),
         // This should return the measurement
         () -> driveTrain.leftEncoder.getPosition(),
         // This should return the setpoint (can also be a constant)
@@ -26,7 +26,7 @@ public class MoveEncoder extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
-          driveTrain.setSpeed(MathUtil.clamp(output, -0.5, 0.5));
+          driveTrain.setSpeed(MathUtil.clamp(output, -0.1, 0.1));
 
           SmartDashboard.putNumber("Move Encoder PID Output", output);
         });

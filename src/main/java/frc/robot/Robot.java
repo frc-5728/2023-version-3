@@ -101,6 +101,9 @@ public class Robot extends TimedRobot {
     if (controller.getXButtonPressed()) {
       m_robotContainer.driveTrain.gyro.resetDisplacement();
       m_robotContainer.driveTrain.gyro.reset();
+
+      m_robotContainer.driveTrain.leftEncoder.setPosition(0);
+      m_robotContainer.driveTrain.rightEncoder.setPosition(0);
     }
   }
 

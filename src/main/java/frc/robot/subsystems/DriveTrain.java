@@ -58,10 +58,10 @@ public class DriveTrain extends SubsystemBase {
     public final AHRS gyro = new AHRS();
 
     public DriveTrain() {
-        leftEncoder.setPositionConversionFactor(wheelCircum);
-        rightEncoder.setPositionConversionFactor(wheelCircum);
-        leftEncoder.setVelocityConversionFactor(wheelCircum);
-        rightEncoder.setVelocityConversionFactor(wheelCircum);
+        // leftEncoder.setPositionConversionFactor((double) 1.0/wheelCircum);
+        // rightEncoder.setPositionConversionFactor((double) 1.0/wheelCircum);
+        // leftEncoder.setVelocityConversionFactor((double) 1.0/wheelCircum);
+        // rightEncoder.setVelocityConversionFactor((double) 1.0/wheelCircum);
         
         kinematics = new DifferentialDriveKinematics(0.5);
         odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());

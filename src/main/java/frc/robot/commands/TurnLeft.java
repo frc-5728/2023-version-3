@@ -13,15 +13,12 @@ import frc.robot.subsystems.DriveTrain;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TurnLeft extends PIDCommand {
-  private double angle;
-  private DriveTrain driveTrain;
-  
   /** Creates a new TurnLeft. */
   public TurnLeft(DriveTrain driveTrain, double angle) {
     // turn "angle" degrees to the left
     super(
         // The controller that the command will use
-        new PIDController(0.0003, 0.00015, 0.0003),
+        new PIDController(0.0003, 0.1, 0.01),
         // This should return the measurement
         () -> {
           double result = driveTrain.gyro.getYaw();
@@ -32,13 +29,13 @@ public class TurnLeft extends PIDCommand {
           return result;
         },
         // This should return the setpoint (can also be a constant)
-        () -> angle/2,
+        () -> angle,
         // This uses the output
         output -> {
           // Use the output here
           System.out.println("Turn left output: " + output);
 
-          double outputClamped = MathUtil.clamp(output, -0.1, 0.1);
+          double outputClamped = MathUtil.clamp(output, -0.15, 0.15);
           driveTrain.setLeftSpeed(outputClamped);
           driveTrain.setRightSpeed(-outputClamped);
         });
@@ -48,11 +45,8 @@ public class TurnLeft extends PIDCommand {
 
     driveTrain.gyro.reset();
 
-    getController().setTolerance(5);
-    getController().setIntegratorRange(-5, 5);
-
-    this.driveTrain = driveTrain;
-    this.angle = angle;
+    getController().setTolerance(3);
+    // getController().setIntegratorRange(-5, 5);
   }
 
   // Returns true when the command should end.

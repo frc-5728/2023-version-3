@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.DropCone;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Move;
+import frc.robot.commands.MoveEncoder;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.TurnLeft;
 import frc.robot.commands.TurnRight;
@@ -56,16 +57,19 @@ public class RobotContainer {
   }
 
   private void configureBindingsDriveTrain() {
+    controller.start().onTrue(new TankDrive(driveTrain));
+    
     controller.leftBumper().onTrue(new TurnLeft(driveTrain, 45));
     controller.rightBumper().onTrue(new TurnRight(driveTrain, 45));
 
-    controller.povUp().onTrue(new Move(0.01, driveTrain));
-    controller.povDown().onTrue(new Move(-0.01, driveTrain));
+    controller.povUp().onTrue(new MoveEncoder(driveTrain, 1));
+    // controller.povUp().onTrue(new Move(0.01, driveTrain));
+    // controller.povDown().onTrue(new Move(-0.01, driveTrain));
   }
 
   private void configureBindingsFeatures() {
     // controller.povUp().onTrue(elevator.setSetpoint(2));
-    elevator.enable();
+    // elevator.enable();
   }
 
   /**

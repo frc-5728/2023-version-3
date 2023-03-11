@@ -39,7 +39,7 @@ public class Elevator extends PIDSubsystem {
     System.out.println();
 
     // motor.set(MathUtil.clamp(output, -0.5, 0.5));
-    motor.set(1);
+    // motor.set(1);
   }
 
   @Override
