@@ -22,5 +22,6 @@ public class RobotMap {
     public static final double SLOW_MODE_RATE = 0.1;
     
     public static final int X_BUTTON_ID = 0;
-    public static final int ARM_MOTOR_ID = 0;
+    public static final int ARM_MOTOR_ID = 7;
+    public static final int DRAWER_ID = 8;
 }
