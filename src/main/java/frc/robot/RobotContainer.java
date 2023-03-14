@@ -24,7 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.VisionUtil.DropCone;
-import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;;
+import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;
+import frc.robot.commands.Automatic.AutoBalance;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -52,6 +53,7 @@ public class RobotContainer {
     configureBindings();
 
     SmartDashboard.putData("Drop Cone", new DropCone(m_rtSubsystem, driveTrain));
+    SmartDashboard.putData("Drop Cone", new AutoBalance(driveTrain));
 
   }
 

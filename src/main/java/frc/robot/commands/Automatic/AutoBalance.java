@@ -1,9 +1,53 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.commands.Automatic;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.DriveTrain;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.subsystems.DriveTrain;
 
-public class AutoBalance extends CommandBase {
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class AutoBalance extends PIDCommand {
+  /** Creates a new AutoBalance. */
+  public AutoBalance(DriveTrain driveTrain) {
+    super(
+        // The controller that the command will use
+        new PIDController(0.0003, 0.1, 0.1),
+        // This should return the measurement
+        () -> driveTrain.gyro.getPitch(),
+        // This should return the setpoint (can also be a constant)
+        () -> 0,
+        // This uses the output
+        output -> {
+          // Use the output here
+          driveTrain.setSpeed(MathUtil.clamp(output, -0.1, 0.1));
+        });
+    // Use addRequirements() here to declare subsystem dependencies.
+    // Configure additional PID options by calling `getController` here.
+
+    getController().setTolerance(2);
+
+    addRequirements(driveTrain);
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return getController().atSetpoint();
+  }
+}
+
+/* package frc.robot.commands.Automatic;
+
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.subsystems.DriveTrain;
+
+public class AutoBalance extends PIDCommand {
 
     private final DriveTrain driveTrain;
 
@@ -61,4 +105,4 @@ public class AutoBalance extends CommandBase {
         return false;
     }
 
-}
+} */
