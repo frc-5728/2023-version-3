@@ -34,17 +34,34 @@ public class TurnMove extends SequentialCommandGroup {
 
     }
 
-    public TurnMove(AprilTagSubsystem atSubsystem, DriveTrain driveTrain, double displacement) {
+    public TurnMove(AprilTagSubsystem atSubsystem, DriveTrain driveTrain, double displacement, int id) {
 
         if (atSubsystem.hasTarget) {
 
-            addCommands(
+            int idIndex = -1;
 
-                new TurnLeft(driveTrain, Units.radiansToDegrees(atSubsystem.getYaw())),
-                new Move(atSubsystem.getRange() - displacement, driveTrain)
+            for (int i = 0; i < atSubsystem.targetIDs.size(); i++) {
 
-            );
+                if ( id = atSubsystem.targetIDs.get(i) ) {
+                    idIndex = i;
+                }
 
+            }
+
+            if (idIndex != -1) {
+
+                addCommands(
+
+                    new TurnLeft(driveTrain, Units.radiansToDegrees(atSubsystem.getYaw(idIndex))),
+                    new Move(atSubsystem.getRange(idIndex) - displacement, driveTrain)
+
+                );
+
+            }
+            else {
+                System.out.println("No target");
+            }
+            
             // Change values to correct units
 
         }

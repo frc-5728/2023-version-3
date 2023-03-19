@@ -22,6 +22,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.HatchMechanism;
 import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;
+import frc.robot.subsystems.Vision.AprilTagSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -30,7 +31,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.VisionUtil.DropCone;
 import frc.robot.commands.Automatic.AutoBalance;
-
+import frc.robot.commands.Automatic.autoPeriod;
+import frc.robot.commands.VisionUtil.goToHome;
+import frc.robot.commands.VisionUtil.goToCoopertition;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -41,6 +44,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ReflectiveTapeSubsystem m_rtSubsystem = new ReflectiveTapeSubsystem();
+  private final AprilTagSubsystem m_atSubsystem = new AprilTagSubsystem();
 
   public final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
@@ -59,7 +63,10 @@ public class RobotContainer {
     configureBindings();
 
     SmartDashboard.putData("Drop Cone", new DropCone(m_rtSubsystem, driveTrain));
-    SmartDashboard.putData("Drop Cone", new AutoBalance(driveTrain));
+    SmartDashboard.putData("Balance", new AutoBalance(driveTrain));
+    SmartDashboard.putData("AUTO", new AutoPeriod(driveTrain));
+    SmartDashboard.putData("Move home", new goToCoopertition(m_atSubsystem, driveTrain));
+    SmartDashboard.putData("Balance", new goToHome(m_atSubsystem, driveTrain));
 
   }
 

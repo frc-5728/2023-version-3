@@ -23,7 +23,7 @@ public class DropCone extends SequentialCommandGroup {
 
             addCommands(
                 
-                new TurnMove(rtSubsystem, driveTrain, displacementCone)
+                new TurnMove(rtSubsystem, driveTrain, this.displacementCone)
 
             );
             // parallel command to raise elevator arm
