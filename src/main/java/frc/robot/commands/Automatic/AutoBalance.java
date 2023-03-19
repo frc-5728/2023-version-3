@@ -27,7 +27,7 @@ public class AutoBalance extends PIDCommand {
         output -> {
           // Use the output here
 
-          System.out.println("autobalance output: " + output);
+          // System.out.println("autobalance output: " + output);
           SmartDashboard.putNumber("ab pid", output);
           driveTrain.setSpeed(-MathUtil.clamp(output, -0.1, 0.1));
         });
