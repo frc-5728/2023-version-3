@@ -22,8 +22,8 @@ public class HatchMechanismCommand extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (hatchMechanism.getIsOpen()) {
-      hatchMechanism.forward();
+    if (!hatchMechanism.getIsOpen()) {
+      hatchMechanism.forward(); // then this command opens up the solenoid
     } else {
       hatchMechanism.reverse();
     }

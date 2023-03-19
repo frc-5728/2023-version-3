@@ -6,16 +6,19 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HatchMechanism extends SubsystemBase {
-  private final DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
-  
+  private final DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
+  // private final Solenoid solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+
   boolean isOpen = false;
+
   /** Creates a new HatchMechanism. */
   public HatchMechanism() {
-    
+
   }
 
   public boolean getIsOpen() {
@@ -24,16 +27,16 @@ public class HatchMechanism extends SubsystemBase {
 
   public void forward() {
     isOpen = true;
-    doubleSolenoid.set(Value.kForward);
+    solenoid.set(Value.kForward);
   }
 
   public void reverse() {
     isOpen = false;
-    doubleSolenoid.set(Value.kReverse);
+    solenoid.set(Value.kReverse);
   }
 
   public void off() {
-    doubleSolenoid.set(Value.kOff);
+    solenoid.set(Value.kOff);
   }
 
   @Override

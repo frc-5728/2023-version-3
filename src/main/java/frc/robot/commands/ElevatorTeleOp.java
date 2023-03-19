@@ -30,10 +30,10 @@ public class ElevatorTeleOp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (joystick.getRawButton(3)) {
+    if (joystick.getRawButtonPressed(3)) {
       elevator.setSpeed(1);
-    } 
-    else if (joystick.getRawButton(2)) {
+    }
+    else if (joystick.getRawButtonPressed(2)) {
       elevator.setSpeed(-1);
     } else {
       elevator.setSpeed(0);

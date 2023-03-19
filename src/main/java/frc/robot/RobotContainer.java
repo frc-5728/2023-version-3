@@ -6,10 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArmCommand;
+import frc.robot.commands.ArmTeleOp;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DrawerInOut;
 import frc.robot.commands.DropCone;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorTeleOp;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.HatchMechanismCommand;
 import frc.robot.commands.Move;
@@ -86,20 +88,23 @@ public class RobotContainer {
 
     controller.a().onTrue(new HatchMechanismCommand(hatchMechanism));
 
-    JoystickButton triggerButton = new JoystickButton(joystick, 0);
+    JoystickButton triggerButton = new JoystickButton(joystick, RobotMap.JOYSTICK_TRIGGER_ID);
     triggerButton.onTrue(new HatchMechanismCommand(hatchMechanism));
 
 
-    JoystickButton upJoystickButton = new JoystickButton(joystick, 3);
-    JoystickButton downJoystickButton = new JoystickButton(joystick, 2);
+    JoystickButton upJoystickButton = new JoystickButton(joystick, RobotMap.ELEVATOR_UP_JOYSTICK);
+    JoystickButton downJoystickButton = new JoystickButton(joystick, RobotMap.ELEVATOR_DOWN_JOYSTICK);
 
     upJoystickButton.onTrue(new ElevatorCommand(elevator, 0));
 
-    JoystickButton armUpJoystickButton = new JoystickButton(joystick, 8);
-    JoystickButton armDownJoystickButton = new JoystickButton(joystick, 7);
+    JoystickButton armUpJoystickButton = new JoystickButton(joystick, RobotMap.ARM_UP_JOYSTICK);
+    JoystickButton armDownJoystickButton = new JoystickButton(joystick, RobotMap.ARM_DOWN_JOYSTICK);
 
-    JoystickButton resetJoystickButtons = new JoystickButton(joystick, 8);
-    // resetJoystickButtons.onTrue(getAutonomousCommand())
+    JoystickButton resetJoystickArmButtons = new JoystickButton(joystick, RobotMap.RESET_ARM_JOYSTICK);
+    JoystickButton resetJoystickElevatorButtons = new JoystickButton(joystick, RobotMap.RESET_ELEVATOR_JOYSTICK);
+    resetJoystickArmButtons.onTrue(new ArmTeleOp(arm));
+
+    resetJoystickElevatorButtons.onTrue(new ElevatorTeleOp(elevator));
   }
 
   /**

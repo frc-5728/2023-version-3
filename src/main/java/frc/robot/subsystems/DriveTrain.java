@@ -58,6 +58,8 @@ public class DriveTrain extends SubsystemBase {
     public final AHRS gyro = new AHRS();
 
     public DriveTrain() {
+        System.out.println("Left encoder position conv factor: " + leftEncoder.getPositionConversionFactor());
+        
         // leftEncoder.setPositionConversionFactor((double) 1.0/wheelCircum);
         // rightEncoder.setPositionConversionFactor((double) 1.0/wheelCircum);
         // leftEncoder.setVelocityConversionFactor((double) 1.0/wheelCircum);

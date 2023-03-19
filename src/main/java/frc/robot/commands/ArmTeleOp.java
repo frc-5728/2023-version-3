@@ -12,28 +12,34 @@ import frc.robot.subsystems.Arm;
 public class ArmTeleOp extends CommandBase {
   Joystick joystick = new Joystick(RobotMap.JOYSTICK_BUTTON_PORT);
   Arm arm;
-  
+
   /** Creates a new ArmTeleOp. */
   public ArmTeleOp(Arm arm) {
     this.arm = arm;
-    
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    if (joystick.getRawButtonPressed(RobotMap.ARM_UP_JOYSTICK)) {
+      arm.setArm(1);
+    } else if (joystick.getRawButtonPressed(RobotMap.ARM_DOWN_JOYSTICK)) {
+      arm.setArm(-1);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
