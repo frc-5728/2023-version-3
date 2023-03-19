@@ -4,26 +4,37 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HatchMechanism extends SubsystemBase {
-  // private final DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
+  private final DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
   
+  boolean isOpen = false;
   /** Creates a new HatchMechanism. */
   public HatchMechanism() {
+    
   }
 
-  // private void forward() {
-  //   doubleSolenoid.set(Value.kForward);
-  // }
+  public boolean getIsOpen() {
+    return isOpen;
+  }
 
-  // private void reverse() {
-  //   doubleSolenoid.set(Value.kReverse);
-  // }
+  public void forward() {
+    isOpen = true;
+    doubleSolenoid.set(Value.kForward);
+  }
 
-  // private void off() {
-  //   doubleSolenoid.set(Value.kOff);
-  // }
+  public void reverse() {
+    isOpen = false;
+    doubleSolenoid.set(Value.kReverse);
+  }
+
+  public void off() {
+    doubleSolenoid.set(Value.kOff);
+  }
 
   @Override
   public void periodic() {

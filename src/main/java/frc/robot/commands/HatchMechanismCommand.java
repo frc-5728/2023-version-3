@@ -4,27 +4,28 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.HatchMechanism;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class HatchMechanism extends InstantCommand {
-  DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
-  boolean isOpen;
+public class HatchMechanismCommand extends InstantCommand {
+  HatchMechanism hatchMechanism;
   
-  public HatchMechanism(boolean isOpen) {
-    this.isOpen = isOpen;
+  public HatchMechanismCommand(HatchMechanism hatchMechanism) {
+    this.hatchMechanism = hatchMechanism;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(hatchMechanism);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (isOpen) doubleSolenoid.set(Value.kForward);
-    else doubleSolenoid.set(Value.kReverse);
+    if (hatchMechanism.getIsOpen()) {
+      hatchMechanism.forward();
+    } else {
+      hatchMechanism.reverse();
+    }
   }
 }

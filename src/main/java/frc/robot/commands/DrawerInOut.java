@@ -4,9 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.ArmProfiledPID;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -24,6 +26,9 @@ public class DrawerInOut extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
+
+          // arm.setDrawer(MathUtil.clamp(output, -0.3, 0.3));
+          arm.setDrawer(0.1);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
@@ -33,6 +38,6 @@ public class DrawerInOut extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return getController().atSetpoint();
   }
 }

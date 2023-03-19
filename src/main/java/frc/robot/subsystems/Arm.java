@@ -27,6 +27,14 @@ public class Arm extends SubsystemBase {
     // drawer.set(VictorSPXControlMode.PercentOutput, 0.3);
   }
 
+  public void setDrawer(double percentOutput) {
+    drawer.set(TalonSRXControlMode.PercentOutput, percentOutput);
+  }
+
+  public void setArm(double percentOutput) {
+    arm.set(TalonSRXControlMode.PercentOutput, percentOutput);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

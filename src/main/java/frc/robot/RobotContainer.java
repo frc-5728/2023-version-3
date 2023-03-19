@@ -6,14 +6,17 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.DrawerInOut;
 import frc.robot.commands.DropCone;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.HatchMechanismCommand;
 import frc.robot.commands.Move;
 import frc.robot.commands.MoveEncoder;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.TurnLeft;
 import frc.robot.commands.TurnRight;
 import frc.robot.commands.TurnToAngle;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmProfiledPID;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
@@ -40,7 +43,7 @@ public class RobotContainer {
 
   public final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
-  private final ArmProfiledPID arm = new ArmProfiledPID();
+  private final Arm arm = new Arm();
   private final HatchMechanism hatchMechanism = new HatchMechanism();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -68,8 +71,12 @@ public class RobotContainer {
   }
 
   private void configureBindingsFeatures() {
-    // controller.povUp().onTrue(elevator.setSetpoint(2));
+    // controller.povUp().onTrue();
+    controller.povLeft().onTrue(new DrawerInOut(arm, -2));
+    controller.povRight().onTrue(new DrawerInOut(arm, 2));
     // elevator.enable();
+
+    controller.a().onTrue(new HatchMechanismCommand(hatchMechanism));
   }
 
   /**
