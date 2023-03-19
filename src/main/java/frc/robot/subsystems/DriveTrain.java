@@ -2,12 +2,15 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -38,20 +41,34 @@ public class DriveTrain extends SubsystemBase {
     private double kP = 0;
     private double kI = 0;
     private double kD = 0;
-    public final PIDController turnController;
+    public final PIDController pidController;
+
+    // this gives the cirumference of the wheel
+    private final double wheelCircum = Units.inchesToMeters(6) * Math.PI; 
 
     // usually paired together to access the robot's locaition/physics info
     // private final DifferentialDriveOdometry odometry;
     private final DifferentialDriveKinematics kinematics;
+    private final DifferentialDriveOdometry odometry;
 
-    public AHRS gyro = new AHRS();
+    // the encoders 
+    public final RelativeEncoder leftEncoder = m0CanSparkMax.getEncoder();
+    public final RelativeEncoder rightEncoder = m2CanSparkMax.getEncoder();
+    
+    public final AHRS gyro = new AHRS();
 
     public DriveTrain() {
+        System.out.println("Left encoder position conv factor: " + leftEncoder.getPositionConversionFactor());
+        
+        // leftEncoder.setPositionConversionFactor((double) 1.0/wheelCircum);
+        // rightEncoder.setPositionConversionFactor((double) 1.0/wheelCircum);
+        // leftEncoder.setVelocityConversionFactor((double) 1.0/wheelCircum);
+        // rightEncoder.setVelocityConversionFactor((double) 1.0/wheelCircum);
         
         kinematics = new DifferentialDriveKinematics(0.5);
+        odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
 
-        turnController = new PIDController(kP, kI, kD);
-        turnController.enableContinuousInput(-180.0f, -180.0f);
+        pidController = new PIDController(kP, kI, kD);
 
         setDefaultCommand(new TankDrive(this));
     }
@@ -75,21 +92,23 @@ public class DriveTrain extends SubsystemBase {
         m3CanSparkMax.set(-speed);
     }
 
+    // for accessing values in the odemetry
+
     @Override
     public void periodic() {
         // displaying data
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
         
-        SmartDashboard.putNumber("Displacement X: ", gyro.getDisplacementX());
-        SmartDashboard.putNumber("Displacement Y: ", gyro.getDisplacementY());
+        SmartDashboard.putNumber("Gyro Displacement X: ", gyro.getDisplacementX());
+        SmartDashboard.putNumber("Gyro Displacement Y: ", gyro.getDisplacementY());
 
         SmartDashboard.putNumber("Pitch", gyro.getPitch());
         SmartDashboard.putNumber("Yaw", gyro.getYaw());
         SmartDashboard.putNumber("Angle", gyro.getAngle());
-        
-        
-        // we dont have encoders
 
-        // odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+        SmartDashboard.putNumber("left Encoder Position", leftEncoder.getPosition());
+        SmartDashboard.putNumber("right Encoder Position", rightEncoder.getPosition());
+
+        odometry.update(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
     }
 }

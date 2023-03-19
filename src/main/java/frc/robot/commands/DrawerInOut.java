@@ -7,46 +7,32 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.ArmProfiledPID;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TurnLeft extends PIDCommand {
-  /** Creates a new TurnLeft. */
-  public TurnLeft(DriveTrain driveTrain, double angle) {
-    // turn "angle" degrees to the left
+public class DrawerInOut extends PIDCommand {
+  /** Creates a new DrawerInOut. */
+  public DrawerInOut(Arm arm, double position) {
     super(
         // The controller that the command will use
-        new PIDController(0.0003, 0.1, 0.01),
+        new PIDController(0, 0, 0),
         // This should return the measurement
-        () -> {
-          double result = driveTrain.gyro.getYaw();
-          // if (driveTrain.gyro.getYaw() < 0) {
-          //   result += 180;
-          // }
-          // return 180-angle + result;
-          return result;
-        },
+        () -> 0,
         // This should return the setpoint (can also be a constant)
-        () -> angle,
+        () -> position,
         // This uses the output
         output -> {
           // Use the output here
-          System.out.println("Turn left output: " + output);
 
-          double outputClamped = MathUtil.clamp(output, -0.15, 0.15);
-          driveTrain.setLeftSpeed(outputClamped);
-          driveTrain.setRightSpeed(-outputClamped);
+          // arm.setDrawer(MathUtil.clamp(output, -0.3, 0.3));
+          arm.setDrawer(0.1);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
-    addRequirements(driveTrain);
-
-    driveTrain.gyro.reset();
-
-    getController().setTolerance(3);
-    // getController().setIntegratorRange(-5, 5);
+    addRequirements(arm);
   }
 
   // Returns true when the command should end.

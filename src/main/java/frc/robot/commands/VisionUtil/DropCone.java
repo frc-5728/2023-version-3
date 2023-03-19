@@ -1,12 +1,8 @@
 package frc.robot.commands.VisionUtil;
 
-import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;
 import frc.robot.subsystems.DriveTrain;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.TurnLeft;
-import frc.robot.commands.Move;
 
 public class DropCone extends SequentialCommandGroup {
     
