@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.VisionUtil.DropCone;
 import frc.robot.commands.Automatic.AutoBalance;
+import frc.robot.commands.Automatic.AutoMove;
 import frc.robot.commands.ElevatorPositionCommand.Position;
 
 /**
@@ -62,7 +63,7 @@ public class RobotContainer {
     configureBindings();
 
     SmartDashboard.putData("Drop Cone", new DropCone(m_rtSubsystem, driveTrain));
-    SmartDashboard.putData("Drop Cone", new AutoBalance(driveTrain));
+    SmartDashboard.putData("Drop Cone", new AutoMove(driveTrain));
 
   }
 
@@ -75,6 +76,8 @@ public class RobotContainer {
     controller.povUp().onTrue(new MoveEncoder(driveTrain, 1));
     // controller.povUp().onTrue(new Move(0.01, driveTrain));
     // controller.povDown().onTrue(new Move(-0.01, driveTrain));
+
+    controller.y().whileTrue(new AutoBalance(driveTrain));
   }
 
   private void configureBindingsFeatures() {
@@ -101,10 +104,16 @@ public class RobotContainer {
     JoystickButton upJoystickButton = new JoystickButton(joystick, RobotMap.ELEVATOR_UP_JOYSTICK);
     JoystickButton downJoystickButton = new JoystickButton(joystick, RobotMap.ELEVATOR_DOWN_JOYSTICK);
 
-    upJoystickButton.onTrue(new ElevatorCommand(elevator, 0));
-
     JoystickButton armUpJoystickButton = new JoystickButton(joystick, RobotMap.ARM_UP_JOYSTICK);
     JoystickButton armDownJoystickButton = new JoystickButton(joystick, RobotMap.ARM_DOWN_JOYSTICK);
+
+    armUpJoystickButton.whileTrue(Commands.run(() -> {
+      arm.setArm(0.5);
+    }, arm));
+
+    armDownJoystickButton.whileTrue(Commands.run(() -> {
+      arm.setArm(-0.5);
+    }, arm));
 
     JoystickButton resetJoystickArmButtons = new JoystickButton(joystick, RobotMap.RESET_ARM_JOYSTICK);
     JoystickButton resetJoystickElevatorButtons = new JoystickButton(joystick, RobotMap.RESET_ELEVATOR_JOYSTICK);
@@ -112,7 +121,10 @@ public class RobotContainer {
 
     resetJoystickElevatorButtons.onTrue(new ElevatorTeleOp(elevator));
 
-    controller.x().onTrue(Commands.runOnce(() -> elevator.resetEncoder(), elevator));
+    controller.x().onTrue(Commands.runOnce(() -> {
+      elevator.resetEncoder();
+      driveTrain.gyro.reset();
+    }, elevator));
 
     JoystickButton mid = new JoystickButton(joystick, 2);
     JoystickButton high = new JoystickButton(joystick, 3);

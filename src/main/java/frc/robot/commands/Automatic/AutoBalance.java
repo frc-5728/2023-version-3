@@ -4,31 +4,41 @@
 
 package frc.robot.commands.Automatic;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.DriveTrain;
 
-public class AutoBalance extends CommandBase {
-  final DriveTrain driveTrain;
-  
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class AutoBalance extends PIDCommand {
   /** Creates a new AutoBalance. */
   public AutoBalance(DriveTrain driveTrain) {
-    this.driveTrain = driveTrain;
-    
+    super(
+        // The controller that the command will use
+        new PIDController(0.01, 0, 0.03),
+        // This should return the measurement
+        () -> driveTrain.gyro.getPitch(),
+        // This should return the setpoint (can also be a constant)
+        () -> 3.390000057220459,
+        // This uses the output
+        output -> {
+          // Use the output here
+
+          System.out.println("autobalance output: " + output);
+          SmartDashboard.putNumber("ab pid", output);
+          driveTrain.setSpeed(-MathUtil.clamp(output, -0.1, 0.1));
+        });
     // Use addRequirements() here to declare subsystem dependencies.
+    // Configure additional PID options by calling `getController` here.
+
+    getController().setTolerance(5);
+    getController().setIntegratorRange(-0.25, 0.25);
+    
     addRequirements(driveTrain);
   }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

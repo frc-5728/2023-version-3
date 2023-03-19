@@ -54,6 +54,10 @@ public class DriveTrain extends SubsystemBase {
     
     public final AHRS gyro = new AHRS();
 
+    public void reset() {
+        gyro.reset();
+    }
+
     public DriveTrain() {
         System.out.println("Left encoder position conv factor: " + leftEncoder.getPositionConversionFactor());
         
@@ -99,7 +103,7 @@ public class DriveTrain extends SubsystemBase {
         SmartDashboard.putNumber("Gyro Displacement X: ", gyro.getDisplacementX());
         SmartDashboard.putNumber("Gyro Displacement Y: ", gyro.getDisplacementY());
 
-        SmartDashboard.putNumber("Pitch", gyro.getPitch());
+        SmartDashboard.putNumber("pitch num", gyro.getPitch());
         SmartDashboard.putNumber("Yaw", gyro.getYaw());
         SmartDashboard.putNumber("Angle", gyro.getAngle());
 

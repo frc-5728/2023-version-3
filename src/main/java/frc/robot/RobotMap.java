@@ -10,6 +10,8 @@ public class RobotMap {
     public static final int MOTOR_RIGHT1_ID = 3;
 
     public static final int XBOXCONTROLLER_ID = 1;
+    public static final int JOYSTICK_BUTTON_PORT = 0;
+
 
     // found at driver station on the right of the device id (still on the left of
     // the screen)
@@ -27,7 +29,6 @@ public class RobotMap {
     public static final int DRAWER_ID = 8;
     public static final int ELEVATOR_MOTOR_ID = 6;
 
-    public static final int JOYSTICK_BUTTON_PORT = 0;
     public static final int JOYSTICK_TRIGGER_ID = 1;
     public static final int ARM_UP_JOYSTICK = 6;
     public static final int ARM_DOWN_JOYSTICK = 7;
