@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.Arm;
@@ -24,6 +25,9 @@ public class ArmCommand extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
+
+          arm.setArm(0.1);
+          // arm.setArm(MathUtil.clamp(output, -0.3, 0.3));
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
@@ -33,6 +37,6 @@ public class ArmCommand extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return getController().atSetpoint();
   }
 }

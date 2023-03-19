@@ -5,9 +5,11 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DrawerInOut;
 import frc.robot.commands.DropCone;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.HatchMechanismCommand;
 import frc.robot.commands.Move;
@@ -20,10 +22,12 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmProfiledPID;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.HatchMechanism;
 import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -50,6 +54,8 @@ public class RobotContainer {
   private final CommandXboxController controller =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+      private final Joystick joystick = new Joystick(RobotMap.JOYSTICK_BUTTON_PORT);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -74,9 +80,26 @@ public class RobotContainer {
     // controller.povUp().onTrue();
     controller.povLeft().onTrue(new DrawerInOut(arm, -2));
     controller.povRight().onTrue(new DrawerInOut(arm, 2));
+
+    controller.b().onTrue(new ArmCommand(arm, 180));
     // elevator.enable();
 
     controller.a().onTrue(new HatchMechanismCommand(hatchMechanism));
+
+    JoystickButton triggerButton = new JoystickButton(joystick, 0);
+    triggerButton.onTrue(new HatchMechanismCommand(hatchMechanism));
+
+
+    JoystickButton upJoystickButton = new JoystickButton(joystick, 3);
+    JoystickButton downJoystickButton = new JoystickButton(joystick, 2);
+
+    upJoystickButton.onTrue(new ElevatorCommand(elevator, 0));
+
+    JoystickButton armUpJoystickButton = new JoystickButton(joystick, 8);
+    JoystickButton armDownJoystickButton = new JoystickButton(joystick, 7);
+
+    JoystickButton resetJoystickButtons = new JoystickButton(joystick, 8);
+    // resetJoystickButtons.onTrue(getAutonomousCommand())
   }
 
   /**

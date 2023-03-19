@@ -4,35 +4,46 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotMap;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.ElevatorSub;
 
-public class ElevatorCommand extends CommandBase {
+public class ElevatorTeleOp extends CommandBase {
   Elevator elevator;
-  double setPoint;
-  
-  /** Creates a new ElevatorCommand. */
-  public ElevatorCommand(Elevator elevator, double setPoint) {
+  Joystick joystick = new Joystick(RobotMap.JOYSTICK_BUTTON_PORT);
+
+  /** Creates a new ElevatorTeleOp. */
+  public ElevatorTeleOp(Elevator elevator) {
     this.elevator = elevator;
-    this.setPoint = setPoint;
-    
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    elevator.enable();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (joystick.getRawButton(3)) {
+      elevator.setSpeed(1);
+    } 
+    else if (joystick.getRawButton(2)) {
+      elevator.setSpeed(-1);
+    } else {
+      elevator.setSpeed(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

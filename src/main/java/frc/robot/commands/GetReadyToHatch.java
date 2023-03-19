@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.HatchMechanism;
 import frc.robot.commands.HatchMechanismCommand;
 

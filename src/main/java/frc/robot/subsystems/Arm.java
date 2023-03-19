@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArmTeleOp;
 
 public class Arm extends SubsystemBase {
   XboxController controller = new XboxController(OperatorConstants.kDriverControllerPort);
@@ -23,8 +24,8 @@ public class Arm extends SubsystemBase {
   
   /** Creates a new Arm. */
   public Arm() {
-    drawer.set(TalonSRXControlMode.PercentOutput, 0.3);
     // drawer.set(VictorSPXControlMode.PercentOutput, 0.3);
+    setDefaultCommand(new ArmTeleOp(this));
   }
 
   public void setDrawer(double percentOutput) {
@@ -38,6 +39,5 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    drawer.set(ControlMode.Position, 1);
   }
 }

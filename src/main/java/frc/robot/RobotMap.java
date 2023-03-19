@@ -24,4 +24,6 @@ public class RobotMap {
     public static final int X_BUTTON_ID = 0;
     public static final int ARM_MOTOR_ID = 7;
     public static final int DRAWER_ID = 8;
+    public static final int ELEVATOR_MOTOR_ID = 6;
+    public static final int JOYSTICK_BUTTON_PORT = 1;
 }
