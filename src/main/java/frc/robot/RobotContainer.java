@@ -9,32 +9,27 @@ import frc.robot.commands.ArmCommand;
 import frc.robot.commands.ArmTeleOp;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DrawerInOut;
-import frc.robot.commands.DropCone;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ElevatorTeleOp;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.HatchMechanismCommand;
-import frc.robot.commands.Move;
 import frc.robot.commands.MoveEncoder;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.TurnLeft;
 import frc.robot.commands.TurnRight;
-import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.ArmProfiledPID;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.HatchMechanism;
 import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.VisionUtil.DropCone;
+import frc.robot.commands.Automatic.AutoBalance;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -64,6 +59,7 @@ public class RobotContainer {
     configureBindings();
 
     SmartDashboard.putData("Drop Cone", new DropCone(m_rtSubsystem, driveTrain));
+    SmartDashboard.putData("Drop Cone", new AutoBalance(driveTrain));
 
   }
 
