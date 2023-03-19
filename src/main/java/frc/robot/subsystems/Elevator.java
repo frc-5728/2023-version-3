@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
@@ -14,44 +16,36 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.commands.ElevatorTeleOp;
 
-public class Elevator extends PIDSubsystem {
+public class Elevator extends SubsystemBase {
   private final CANSparkMax motor = new CANSparkMax(RobotMap.ELEVATOR_MOTOR_ID, MotorType.kBrushless);
   private final RelativeEncoder encoder = motor.getEncoder();
-
+  private final SparkMaxPIDController pidController = motor.getPIDController();
+  private boolean manualMode = true;
   /** Creates a new Elevator. */
   public Elevator() {
-    super(
-        // The PIDController used by the subsystem
-        new PIDController(0.3, 0, 0));
-
+    pidController.setP(0.003);
+    pidController.setI(0);
+    pidController.setD(0);
+    pidController.setFF(0);
     encoder.setPositionConversionFactor(1);
+
+    
+    //TODO: remove after set
+    motor.burnFlash();
     setDefaultCommand(new ElevatorTeleOp(this));
   }
 
   public void setSpeed(double percentOutput) {
+    if(!manualMode) return;
     motor.set(percentOutput);
   }
 
-  @Override
-  public void useOutput(double output, double setpoint) {
-    // Use the output here
-
-    System.out.println("Elevator output: " + output);
-    SmartDashboard.putNumber("Elevator output", output);
-    System.out.println("Elevator Encoder value: " + encoder.getPosition());
-    SmartDashboard.putNumber("Elevator Encoder value", encoder.getPosition());
-    System.out.println();
-
-    // motor.set(MathUtil.clamp(output, -0.5, 0.5));
-    // motor.set(1);
-  }
-
-  @Override
-  public double getMeasurement() {
-    // Return the process variable measurement here
-    return encoder.getPosition();
+  public void setPosition(double position) {
+    if(manualMode) return;
+    pidController.setReference(position, ControlType.kPosition);
   }
 }
