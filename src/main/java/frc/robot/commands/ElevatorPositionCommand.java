@@ -10,17 +10,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.Elevator;
 
-public class ElevatorTeleOp extends CommandBase {
-  Elevator elevator;
-  Joystick joystick = new Joystick(RobotMap.JOYSTICK_BUTTON_PORT);
+public class ElevatorPositionCommand extends CommandBase {
+  final Elevator elevator;
+  final Position pos;
 
-  /** Creates a new ElevatorTeleOp. */
-  public ElevatorTeleOp(Elevator elevator) {
+  public enum Position {
+    LOW(-200), MID(-700), HIGH(-1337);
+
+    private final double position;
+    Position(double position) {
+      this.position = position;
+    }
+
+    public double getPosition() {
+      return this.position;
+    }
+  }
+
+  public ElevatorPositionCommand(Elevator elevator, Position pos) {
     this.elevator = elevator;
-    SmartDashboard.putNumber("Elevator Speed", 0);
-
-
-    // Use addRequirements() here to declare subsystem dependencies.
+    this.pos = pos;
     addRequirements(elevator);
   }
 
@@ -32,7 +41,7 @@ public class ElevatorTeleOp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-     elevator.setSpeed(SmartDashboard.getNumber("Elevator Speed", 0));
+    elevator.setPosition(pos.getPosition());
   }
 
   // Called once the command ends or is interrupted.

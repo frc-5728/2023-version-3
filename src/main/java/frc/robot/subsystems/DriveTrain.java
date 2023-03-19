@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -28,12 +29,8 @@ public class DriveTrain extends SubsystemBase {
     private CANSparkMax m2CanSparkMax = new CANSparkMax(RobotMap.MOTOR_RIGHT0_ID, MotorType.kBrushless);
     private CANSparkMax m3CanSparkMax = new CANSparkMax(RobotMap.MOTOR_RIGHT1_ID, MotorType.kBrushless);
 
-    // drive trains
-    // these shit didn't work; don't use them
-    private final MotorControllerGroup leftMotors = new MotorControllerGroup(m0CanSparkMax, m1CanSparkMax);
-    private final MotorControllerGroup rightMotors = new MotorControllerGroup(m2CanSparkMax, m3CanSparkMax);
-
-    private final DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
+    public final SparkMaxPIDController leftController = m0CanSparkMax.getPIDController();
+    public final SparkMaxPIDController rightController = m2CanSparkMax.getPIDController();
 
     // now for the encoders
     

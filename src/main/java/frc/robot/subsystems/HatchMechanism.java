@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HatchMechanism extends SubsystemBase {
-  private final DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
-  // private final Solenoid solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+  // private final DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 0);
+  private final Solenoid solenoid = new Solenoid(PneumaticsModuleType.REVPH, 15);
 
   boolean isOpen = false;
 
@@ -26,17 +26,14 @@ public class HatchMechanism extends SubsystemBase {
   }
 
   public void forward() {
+    // solenoid.set(Value.kForward);
+    if (!isOpen) solenoid.set(isOpen);
     isOpen = true;
-    solenoid.set(Value.kForward);
   }
 
   public void reverse() {
+    if (isOpen) solenoid.set(isOpen);
     isOpen = false;
-    solenoid.set(Value.kReverse);
-  }
-
-  public void off() {
-    solenoid.set(Value.kOff);
   }
 
   @Override

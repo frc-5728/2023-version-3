@@ -10,7 +10,6 @@ import frc.robot.RobotMap;
 import frc.robot.subsystems.Arm;
 
 public class ArmTeleOp extends CommandBase {
-  Joystick joystick = new Joystick(RobotMap.JOYSTICK_BUTTON_PORT);
   Arm arm;
 
   /** Creates a new ArmTeleOp. */
@@ -29,11 +28,7 @@ public class ArmTeleOp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (joystick.getRawButtonPressed(RobotMap.ARM_UP_JOYSTICK)) {
-      arm.setArm(1);
-    } else if (joystick.getRawButtonPressed(RobotMap.ARM_DOWN_JOYSTICK)) {
-      arm.setArm(-1);
-    }
+    
   }
 
   // Called once the command ends or is interrupted.

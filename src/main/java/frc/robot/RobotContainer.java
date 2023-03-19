@@ -10,6 +10,7 @@ import frc.robot.commands.ArmTeleOp;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DrawerInOut;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorPositionCommand;
 import frc.robot.commands.ElevatorTeleOp;
 import frc.robot.commands.HatchMechanismCommand;
 import frc.robot.commands.MoveEncoder;
@@ -24,12 +25,14 @@ import frc.robot.subsystems.HatchMechanism;
 import frc.robot.subsystems.Vision.ReflectiveTapeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.VisionUtil.DropCone;
 import frc.robot.commands.Automatic.AutoBalance;
+import frc.robot.commands.ElevatorPositionCommand.Position;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -85,7 +88,14 @@ public class RobotContainer {
     controller.a().onTrue(new HatchMechanismCommand(hatchMechanism));
 
     JoystickButton triggerButton = new JoystickButton(joystick, RobotMap.JOYSTICK_TRIGGER_ID);
-    triggerButton.onTrue(new HatchMechanismCommand(hatchMechanism));
+    triggerButton.onTrue(Commands.runOnce(() -> {
+      // System.out.println("trigger pressed");
+      if (hatchMechanism.getIsOpen()) {
+        hatchMechanism.reverse();
+      } else {
+        hatchMechanism.forward();
+      }
+    }, hatchMechanism));
 
 
     JoystickButton upJoystickButton = new JoystickButton(joystick, RobotMap.ELEVATOR_UP_JOYSTICK);
@@ -101,6 +111,15 @@ public class RobotContainer {
     resetJoystickArmButtons.onTrue(new ArmTeleOp(arm));
 
     resetJoystickElevatorButtons.onTrue(new ElevatorTeleOp(elevator));
+
+    controller.x().onTrue(Commands.runOnce(() -> elevator.resetEncoder(), elevator));
+
+    JoystickButton mid = new JoystickButton(joystick, 2);
+    JoystickButton high = new JoystickButton(joystick, 3);
+
+    mid.whileTrue(new ElevatorPositionCommand(elevator, Position.MID));
+    high.whileTrue(new ElevatorPositionCommand(elevator, Position.HIGH));
+
   }
 
   /**
@@ -120,7 +139,7 @@ public class RobotContainer {
     // xButtonTrigger.onTrue(); // some elevator command activation here probs
 
     
-    // these below are boilder plate codes
+    // these below are boilder plate codes 
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
